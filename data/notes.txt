@@ -1,0 +1,31 @@
+Time-Varying Factors: Some models do not account for time-varying factors that could influence unemployment, such as seasonal variations or long-term economic trends.
+External Influences: Some models do not account for external factors like economic crises, policy changes, or global events that could significantly impact unemployment rates.
+
+##Forecasting of the Unemployment Rate in Turkey: Comparison of the Machine Learning Models
+Model-1 : Uses only unemployment data and employs Artificial Neural Networks (ANN) and Support Vector Machines (SVM) to forecast unemployment rates.
+Model-2 : Incorporates additional economic parameters (inflation, exchange rate, and labor force data) and uses ANN, SVM, and XGBoost algorithms.
+
+##Predictive models to address unemployment rates in the implementation of Industry 4
+Support Vector Regression (SVR)
+Usage: SVR has been used to develop predictive models for unemployment rates in countries such as China and Turkey
+Random Forests (RF)
+Usage: Random Forests have been used to develop predictive models for unemployment rates in countries such as Brazil and India.
+
+##A Comprehensive study of applying machine learning algorithms for time series data prediction to the Irish Labour Market Unemployment Rate
+Statistical Models:
+ARIMA (AutoRegressive Integrated Moving Average)
+SARIMA (Seasonal AutoRegressive Integrated Moving Average)
+Machine Learning Models:
+Random Forest
+Ridge Regression
+K-Nearest Neighbors (KNN) Regression
+XGBoost
+
+Can Machine Learning on Economic Data Better Forecast the Unemployment Rate?
+Neural Network :
+Usage : The neural network model is trained using a large dataset of macroeconomic variables from the Federal Reserve Economic Database (FRED). The model is trained on data from 1970 to 2000 and used to forecast quarterly unemployment rates from 2001 to 2018. The model includes principal component analysis (PCA) for dimensionality reduction and various hyper-parameters such as the number of hidden layers, number of neurons per layer, and activation functions.
+Result : The non-rolling window variant of the neural network model outperforms the Survey of Professional Forecasters (SPF) across all time periods. The best configuration involves three hidden layers with 97 neurons each and the logistic activation function.
+
+
+
+
