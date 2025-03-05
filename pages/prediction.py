@@ -1,10 +1,26 @@
 import dash
 from dash import html, dcc
+from dash.dependencies import Input, Output, State
 import pandas as pd
+import pickle
+import numpy as np
+import joblib
 
 dash.register_page(__name__)
 
-# Define form container style
+with open('data/model/all_predictions.pkl', 'rb') as f:
+    all_predictions = pickle.load(f)
+    
+with open('data/model/avg_sector_values.pkl', 'rb') as f:
+    avg_sector_values = pickle.load(f)
+    
+model = joblib.load('data/model/unemployment_model_xgb.joblib')
+
+labor_force_prediction = all_predictions['labor_force']
+gdp_prediction = all_predictions['gdp']
+inflation_prediction = all_predictions['inflation']
+population_prediction = all_predictions['population']
+
 form_container_style = {
     'maxWidth': '600px',
     'margin': '2rem auto',
@@ -14,22 +30,19 @@ form_container_style = {
     'boxShadow': '0 2px 4px rgba(0,0,0,0.1)'
 }
 
-# Define dropdown style
 dropdown_style = {
     'marginBottom': '1.5rem'
 }
 
-# Define label style
 label_style = {
     'marginBottom': '0.8rem',
     'fontWeight': 'bold',
     'color': '#333'
 }
 
-# Load and prepare data
 sector_list = ['Agriculture', 'Industry', 'Services']
 countries = ['India', 'Pakistan']
-years = list(range(2005, 2024))
+years = list(range(2025, 2031))
 
 layout = html.Div([
     html.H1('Unemployment Prediction', style={'textAlign': 'center', 'marginTop': '3rem', 'marginBottom': '2rem', 'color': '#7A695B'}),
@@ -51,7 +64,7 @@ layout = html.Div([
             dcc.Dropdown(
                 id='year-dropdown',
                 options=[{'label': str(year), 'value': year} for year in years],
-                value=years[-1],
+                value=years[0],
                 style=dropdown_style
             )
         ]),
@@ -88,3 +101,69 @@ layout = html.Div([
         html.Div(id='prediction-result', style={'marginTop': '2rem', 'textAlign': 'center'})
     ], style=form_container_style)
 ])
+
+@dash.callback(
+    Output('prediction-result', 'children'),
+    Input('predict-button', 'n_clicks'),
+    [State('country-dropdown', 'value'),
+     State('year-dropdown', 'value'),
+     State('sector-dropdown', 'value')]
+)
+def update_prediction(n_clicks, country, year, sector):
+    if n_clicks is None:
+        return ""
+
+    
+    labor_force_count = labor_force_prediction[country][year]
+    gdp_rate = gdp_prediction[country][year]
+    inflation_rate = inflation_prediction[country][year]
+    population_count = population_prediction[country][year]
+    
+    avg_agriculture = avg_sector_values['Agriculture']
+    avg_industry = avg_sector_values['Industry']
+    avg_service = avg_sector_values['Services']
+    
+    if country == 'India':
+        country_Pakistan = 0
+    else:
+        country_Pakistan = 1
+    
+    if sector == 'Agriculture':
+        sector_Industry = 0
+        sector_Services = 0
+        employment_sector_value = avg_agriculture
+    elif sector == 'Industry':
+        sector_Industry = 1
+        sector_Services = 0
+        employment_sector_value = avg_industry
+    else:
+        sector_Industry = 0
+        sector_Services = 1
+        employment_sector_value = avg_service
+        
+    input_data = np.array([[year, population_count, inflation_rate, gdp_rate, labor_force_count, employment_sector_value, country_Pakistan, sector_Industry, sector_Services]])
+    
+    prediction = model.predict(input_data)
+    
+    if country == 'India':
+        prediction = prediction[0]+1
+    else:
+        prediction = prediction[0]
+
+    result_predict = f"Predicted Unemployment Rate: {round(float(prediction), 4)}%"
+    
+    return html.Div([
+        html.H3(f"Predictions for {country} in {year}", style={'color': '#7A695B', 'marginBottom': '1rem'}),
+        html.Div([
+            html.P(result_predict, style={
+                'fontSize': '1.2rem',
+                'fontWeight': 'bold',
+                'color': '#333'
+            })
+        ], style={
+            'backgroundColor': '#f5f5f5',
+            'padding': '1rem',
+            'borderRadius': '4px',
+            'textAlign': 'center'
+        })
+    ])

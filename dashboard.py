@@ -5,7 +5,6 @@ import pandas as pd
 
 app = Dash(__name__, use_pages=True)
 
-# Define the navigation bar style
 nav_style = {
     'display': 'flex',
     'justifyContent': 'space-between',
@@ -16,7 +15,6 @@ nav_style = {
     'padding': '20px 40px'
 }
 
-# Define the logo style
 logo_style = {
     'height': '45px',
     'width': 'auto'
@@ -27,7 +25,6 @@ button_container_style = {
     'gap': '1rem'
 }
 
-# Define the button style
 button_style = {
     'padding': '0.5rem 1rem',
     'backgroundColor': '#f9943b',
@@ -38,7 +35,7 @@ button_style = {
     'fontSize': '16px'
 }
 
-# Requires Dash 2.17.0 or later
+
 app.layout = html.Div([
     # Navigation Bar
     html.Nav([
