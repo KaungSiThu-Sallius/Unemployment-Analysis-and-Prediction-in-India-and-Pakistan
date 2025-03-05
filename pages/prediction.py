@@ -14,7 +14,7 @@ with open('data/model/all_predictions.pkl', 'rb') as f:
 with open('data/model/avg_sector_values.pkl', 'rb') as f:
     avg_sector_values = pickle.load(f)
     
-model = joblib.load('data/model/unemployment_model_xgb.joblib')
+model.load_model('data/model/unemployment_model_xgb.json')
 
 labor_force_prediction = all_predictions['labor_force']
 gdp_prediction = all_predictions['gdp']
