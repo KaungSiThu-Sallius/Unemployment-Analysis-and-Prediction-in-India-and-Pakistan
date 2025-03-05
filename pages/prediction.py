@@ -5,6 +5,7 @@ import pandas as pd
 import pickle
 import numpy as np
 import joblib
+import xgboost as xgb
 
 dash.register_page(__name__)
 
@@ -13,7 +14,8 @@ with open('data/model/all_predictions.pkl', 'rb') as f:
     
 with open('data/model/avg_sector_values.pkl', 'rb') as f:
     avg_sector_values = pickle.load(f)
-    
+
+model = xgb.XGBRegressor()
 model.load_model('data/model/unemployment_model_xgb.json')
 
 labor_force_prediction = all_predictions['labor_force']
