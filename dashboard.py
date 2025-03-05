@@ -3,7 +3,9 @@ from dash import Dash, html, dcc, callback, Output, Input
 import plotly.express as px
 import pandas as pd
 
-app = Dash(__name__, use_pages=True)
+# At the top of the file, modify the app initialization:
+app = Dash(__name__, use_pages=True, suppress_callback_exceptions=True)
+server = app.server  # Add this line
 
 nav_style = {
     'display': 'flex',
