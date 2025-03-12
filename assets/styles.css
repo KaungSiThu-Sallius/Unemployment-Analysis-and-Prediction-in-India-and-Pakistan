@@ -6,3 +6,11 @@ body,
   height: 100%;
   width: 100%;
 }
+
+.shadow_box {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.analysis_page {
+  padding-bottom: 50px;
+}

@@ -2,10 +2,12 @@ import dash
 from dash import Dash, html, dcc, callback, Output, Input
 import plotly.express as px
 import pandas as pd
+import dash_bootstrap_components as dbc
 
-# At the top of the file, modify the app initialization:
-app = Dash(__name__, use_pages=True, suppress_callback_exceptions=True)
-server = app.server  # Add this line
+external_stylesheets = [dbc.themes.CERULEAN]
+
+app = Dash(__name__, use_pages=True, suppress_callback_exceptions=True, external_stylesheets=external_stylesheets)
+server = app.server 
 
 nav_style = {
     'display': 'flex',
