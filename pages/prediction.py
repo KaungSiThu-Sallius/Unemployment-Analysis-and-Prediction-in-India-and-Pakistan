@@ -70,18 +70,30 @@ layout = html.Div([
                 style=dropdown_style
             )
         ]),
+    
         
-        # Sector Dropdown
+       # GDP Input
         html.Div([
-            html.Label('Select Employment Sector', style=label_style),
-            dcc.Dropdown(
-                id='sector-dropdown',
-                options=[{'label': sector, 'value': sector} for sector in sector_list],
-                value=sector_list[0],
-                style=dropdown_style
+            html.Label('Enter GDP Rate (%)', style=label_style),
+            dcc.Input(
+                id='gdp-input',
+                type='number',
+                placeholder='Enter GDP rate',
+                style={'width': '100%', 'padding': '0.5rem', 'marginBottom': '1.5rem'}
             )
         ]),
-        
+
+        # Inflation Input
+        html.Div([
+            html.Label('Enter Inflation Rate (%)', style=label_style),
+            dcc.Input(
+                id='inflation-input',
+                type='number',
+                placeholder='Enter Inflation rate',
+                style={'width': '100%', 'padding': '0.5rem', 'marginBottom': '1.5rem'}
+            )
+        ]),
+
         # Predict Button
         html.Button(
             'Predict',
@@ -108,42 +120,33 @@ layout = html.Div([
     Output('prediction-result', 'children'),
     Input('predict-button', 'n_clicks'),
     [State('country-dropdown', 'value'),
-     State('year-dropdown', 'value'),
-     State('sector-dropdown', 'value')]
+    State('year-dropdown', 'value'),
+    State('gdp-input', 'value'),
+    State('inflation-input', 'value')
+    ]
 )
-def update_prediction(n_clicks, country, year, sector):
+def update_prediction(n_clicks, country, year, gdp_input, inflation_input):
     if n_clicks is None:
         return ""
 
     
     labor_force_count = labor_force_prediction[country][year]
-    gdp_rate = gdp_prediction[country][year]
-    inflation_rate = inflation_prediction[country][year]
+    # gdp_rate = gdp_prediction[country][year]
+    # inflation_rate = inflation_prediction[country][year]
+    gdp_rate = gdp_input if gdp_input is not None else gdp_prediction[country][year]
+    inflation_rate = inflation_input if inflation_input is not None else inflation_prediction[country][year]
     population_count = population_prediction[country][year]
     
     avg_agriculture = avg_sector_values['Agriculture']
-    avg_industry = avg_sector_values['Industry']
-    avg_service = avg_sector_values['Services']
     
     if country == 'India':
         country_Pakistan = 0
     else:
         country_Pakistan = 1
     
-    if sector == 'Agriculture':
-        sector_Industry = 0
-        sector_Services = 0
-        employment_sector_value = avg_agriculture
-    elif sector == 'Industry':
-        sector_Industry = 1
-        sector_Services = 0
-        employment_sector_value = avg_industry
-    else:
-        sector_Industry = 0
-        sector_Services = 1
-        employment_sector_value = avg_service
-        
-    input_data = np.array([[year, population_count, inflation_rate, gdp_rate, labor_force_count, employment_sector_value, country_Pakistan, sector_Industry, sector_Services]])
+    employment_sector_value = avg_agriculture  
+            
+    input_data = np.array([[year, population_count, inflation_rate, gdp_rate, labor_force_count, employment_sector_value, country_Pakistan, False, False]])
     
     prediction = model.predict(input_data)
     

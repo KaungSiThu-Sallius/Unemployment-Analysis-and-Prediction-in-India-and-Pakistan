@@ -126,39 +126,3 @@ layout = dbc.Container([
     ]),
 ], className='analysis_page')
 
-# @callback(
-#     Output("price_trend_fig", "figure"), 
-#     Output("price_per_flat_fig", "figure"),
-#     Input("price_per_town", "clickData"),
-#     Input("reset_map", "n_clicks")
-# )
-# def updateGraphs(clickData, n_clicks):
-#     ctx = dash.callback_context
-    
-#     if ctx.triggered and ctx.triggered[0]['prop_id'].startswith("reset_map"):
-#         return price_trend_fig, price_per_flat_fig
-    
-#     if not clickData:
-#         return price_trend_fig, price_per_flat_fig
-    
-#     clickedTown = clickData["points"][0]['location']
-    
-#     town_data = df[df["town"] == clickedTown]
-    
-#     town_trend = town_data.groupby("month", as_index=False)["resale_price"].mean()    
-#     trend_fig = px.line(
-#                 x=town_trend['month'], 
-#                 y=town_trend['resale_price'], 
-#                 title=f'Trend of Average Resale Prices Over Time in {clickedTown}', 
-#                 labels={'x': 'Year', 'y': 'Average Resale Price'}
-#     )
-#     trend_fig.update_layout(yaxis_range=[300000, town_trend['resale_price'].max()+100000], title_font=dict(size=22))
-    
-#     town_flat_price = town_data.groupby("flat_type", as_index=False)["resale_price"].mean()
-#     flat_fig = px.pie(
-#         town_flat_price, values='resale_price', names='flat_type', hole=.3,title='Resale Price Distribution by Flat Type'
-#     )
-#     flat_fig.update_traces(textinfo='percent+label')
-#     flat_fig.update_layout(title_font=dict(size=20), showlegend=False)
-
-#     return trend_fig, flat_fig
