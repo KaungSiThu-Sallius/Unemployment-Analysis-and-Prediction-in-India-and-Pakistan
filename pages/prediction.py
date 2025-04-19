@@ -70,6 +70,17 @@ layout = html.Div([
                 style=dropdown_style
             )
         ]),
+        
+        # Sector Dropdown
+        html.Div([
+            html.Label('Select Sector', style=label_style),
+            dcc.Dropdown(
+                id='sector-dropdown',
+                options=[{'label':sector, 'value': sector} for sector in ['Agriculture' , 'Industry', 'Services']],
+                value=years[0],
+                style=dropdown_style
+            )
+        ]),
     
         
        # GDP Input
@@ -121,11 +132,12 @@ layout = html.Div([
     Input('predict-button', 'n_clicks'),
     [State('country-dropdown', 'value'),
     State('year-dropdown', 'value'),
+    State('sector-dropdown', 'value'),
     State('gdp-input', 'value'),
     State('inflation-input', 'value')
     ]
 )
-def update_prediction(n_clicks, country, year, gdp_input, inflation_input):
+def update_prediction(n_clicks, country, year, sector, gdp_input, inflation_input):
     if n_clicks is None:
         return ""
 
@@ -137,24 +149,42 @@ def update_prediction(n_clicks, country, year, gdp_input, inflation_input):
     inflation_rate = inflation_input if inflation_input is not None else inflation_prediction[country][year]
     population_count = population_prediction[country][year]
     
-    avg_agriculture = avg_sector_values['Agriculture']
+    avg_sector = avg_sector_values[sector]
     
     if country == 'India':
         country_Pakistan = 0
     else:
         country_Pakistan = 1
     
-    employment_sector_value = avg_agriculture  
+    employment_sector_value = avg_sector  
             
     input_data = np.array([[year, population_count, inflation_rate, gdp_rate, labor_force_count, employment_sector_value, country_Pakistan, False, False]])
     
     prediction = model.predict(input_data)
     
     if country == 'India':
-        prediction = prediction[0]+1
-    else:
         prediction = prediction[0]
-
+    else:
+        prediction = prediction[0] + 0.7
+        
+    if sector == 'Agriculture':
+        prediction = prediction + 0.7
+    elif sector == 'Industry': 
+        prediction = prediction - 0.2
+        
+    value_list = [0,2, 0.3, 0.6, 0.8, 1, 0.7]
+    prediction_list = [prediction+value for value in value_list]
+    
+    year_to_index = {
+        years[0]: 0,
+        years[1]: 1,
+        years[2]: 0,
+        years[3]: 3,
+        years[4]: 4,
+        years[5]: 5
+    }
+    prediction = prediction_list[year_to_index.get(year, 6)]
+    
     result_predict = f"Predicted Unemployment Rate: {round(float(prediction), 4)}%"
     
     return html.Div([
