@@ -22,7 +22,7 @@ Our project tackled this problem by building a machine learning pipeline to repl
 To solve this, I developed an end-to-end data science pipeline:
 
 * **Data Collection & Merging:** Aggregated multi-dimensional datasets including Population, Inflation, GDP, and Employment by Sector for India and Pakistan.
-* **Data Preprocessing:** Utilized Pandas for extensive cleaning, including handling null values, categorical encoding (`get_dummies`), and reshaping data from wide to long formats for time-series compatibility.
+* **Data Preprocessing:** Utilized Pandas for extensive cleaning, including handling null values, categorical encoding, and reshaping data from wide to long formats for time-series compatibility.
 * **Exploratory Data Analysis (EDA):** Leveraged Seaborn and Matplotlib to visualize historical trends, identifying correlations between economic sectors and unemployment rates.
 * **Model Training:** Experimented with multiple regression techniques:
     * *Linear Regression & Lasso* for baseline trends.
@@ -46,7 +46,7 @@ The final solution offers a dual-pronged approach to economic analysis:
 The machine learning models achieved exceptional accuracy in forecasting unemployment rates:
 
 * **Best Model:** XGBoost Regressor
-* **Test Set R² Score:** **~0.99** (Explains 99% of the variance in the data)
+* **Test Set R² Score:** **~0.96** (Explains 96% of the variance in the data)
 * **Test RMSE:** Extremely low error rates (e.g., ~0.0003 in normalized scale), indicating precise predictions.
 
 **Key Findings:**
